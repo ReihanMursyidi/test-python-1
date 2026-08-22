@@ -3,41 +3,46 @@ from unittest.mock import MagicMock
 from app.services.incident_service import IncidentService
 
 @pytest.fixture
-def mock_repo():
-   return MagicMock()
-
-@pytest.fixture
-def mock_classifier():
-   return MagicMock()
-
-@pytest.fixture
-def incident_service(mock_repo, mock_classifier):
+def incident_service():
+   mock_repo = MagicMock()
+   mock_classifier = MagicMock()
+   
+   mock_classifier.predict.return_value = "DATABASE"
+   
    return IncidentService(repository=mock_repo, classifier=mock_classifier)
 
-def test_incident_creation_and_interactions(incident_service, mock_repo, mock_classifier):
-   # Setup mock return values
-   mock_classifier.predict_category.return_value = "NETWORK"
-   mock_repo.save.return_value = {"id": 1, "status": "OPEN", "category": "NETWORK"}
-
-   # Eksekusi fungsi
-   result = incident_service.create_incident(
-      title="Wifi disconnected",
-      description="Cannot connect to office wifi",
+def test_priority_high_when_server_down(incident_service):
+   incident_service.create_incident(
+      title="Server down",
+      description="Production is not accessible",
       reported_by="user@example.com"
    )
 
-   # Verifikasi 7: Classifier dipanggil ketika incident dibuat
-   mock_classifier.predict_category.assert_called_once_with(
-      "Wifi disconnected", "Cannot connect to office wifi"
-   )
+   args, _ = incident_service.repository.save.call_args
+   saved_incident = args[0]
+   
+   assert saved_incident.priority == "HIGH"
 
-   # Verifikasi 5: Repository/service interaction (pastikan save dipanggil)
-   mock_repo.save.assert_called_once()
-   saved_data = mock_repo.save.call_args[0][0] # Mengambil argumen pertama dari pemanggilan save
+def test_priority_medium_when_login_error(incident_service):
+   incident_service.create_incident(
+      title="Login Issue",
+      description="I got an error when logging in",
+      reported_by="user@example.com"
+   )
    
-   assert saved_data["category"] == "NETWORK"
-   assert saved_data["reported_by"] == "user@example.com"
+   args, _ = incident_service.repository.save.call_args
+   saved_incident = args[0]
    
-   # Verifikasi 2: Incident creation berhasil[cite: 1]
-   assert result["id"] == 1
-   assert result["category"] == "NETWORK"
+   assert saved_incident.priority == "MEDIUM"
+
+def test_priority_low_for_general_questions(incident_service):
+   incident_service.create_incident(
+      title="Need new mouse",
+      description="My mouse is broken",
+      reported_by="user@example.com"
+   )
+   
+   args, _ = incident_service.repository.save.call_args
+   saved_incident = args[0]
+   
+   assert saved_incident.priority == "LOW"

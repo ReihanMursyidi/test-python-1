@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, status
 from typing import List, Optional
 from app.schemas.incident_schema import IncidentCreate, IncidentResponse, IncidentUpdateStatus, IncidentStatus, IncidentPriority
 from app.core.dependencies import get_incident_service
@@ -10,7 +10,8 @@ router = APIRouter(prefix="/incidents", tags=["Incidents"])
 # 1. Create Incident
 @router.post("", response_model=IncidentResponse, status_code=201)
 def create_incident(
-   payload: IncidentCreate, 
+   payload: IncidentCreate,
+   background_tasks: BackgroundTasks,
    service: IncidentService = Depends(get_incident_service)
 ):
    incident = service.create_incident(

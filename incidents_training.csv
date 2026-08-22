@@ -1,0 +1,21 @@
+text,category
+"cannot login to dashboard",ACCESS
+"database connection timeout",DATABASE
+"payment transaction failed",PAYMENT
+"wifi disconnected repeatedly",NETWORK
+"forgot my password",ACCESS
+"session expired error",ACCESS
+"cannot access my account",ACCESS
+"server is down",DATABASE
+"database error 500",DATABASE
+"failed to connect to db",DATABASE
+"credit card rejected",PAYMENT
+"checkout failed",PAYMENT
+"payment gateway error",PAYMENT
+"no internet connection",NETWORK
+"network cable unplugged",NETWORK
+"connection lost",NETWORK
+"how to change profile picture",OTHER
+"printer is out of ink",OTHER
+"requesting a new laptop",OTHER
+"where is the cafeteria",OTHER

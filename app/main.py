@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import incident_routes
+from app.api import incident_routes
 
 app = FastAPI(
    title = "Incident Management API",
