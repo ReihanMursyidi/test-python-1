@@ -1,5 +1,3 @@
-# File: tests/test_notification.py
-
 import pytest
 import httpx
 from unittest.mock import patch

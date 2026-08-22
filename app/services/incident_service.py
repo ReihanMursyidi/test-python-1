@@ -1,5 +1,5 @@
-from app.repositories.incident_repository import IncidentRepository
-from app.services.classification_service import ClassificationService
+from repositories.incident_repositories import IncidentRepository
+from classification_service import ClassificationService
 
 class IncidentService:
    def __init__(
