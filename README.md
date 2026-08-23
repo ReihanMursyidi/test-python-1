@@ -1,50 +1,85 @@
 # Incident Management Backend System
 
-🚀 Cara Menjalankan Aplikasi
+Backend untuk mengelola insiden, mulai dari pembuatan tiket hingga penentuan prioritas dan kategori secara otomatis.
 
-Menggunakan Docker
+## 🚀 Menjalankan Aplikasi
 
-Sistem sudah sepenuhnya Dockerized. Jalankan perintah ini di terminal:
+### Menggunakan Docker
 
+Pastikan Docker dan Docker Compose telah terpasang, lalu jalankan:
+
+```bash
 docker-compose up --build
+```
 
-🧪 Cara Menjalankan Test
+## 🧪 Menjalankan Pengujian
 
-Jalankan perintah berikut di terminal:
+Untuk menjalankan seluruh test dengan output terperinci:
 
+```bash
 python -m pytest -v
+```
 
-⚙️ Environment Variables
+## ⚙️ Environment Variables
 
-# URL koneksi untuk aplikasi lokal
+Buat file `.env` pada root project dan isi dengan konfigurasi berikut:
+
+```dotenv
+# URL koneksi database untuk aplikasi lokal
 DATABASE_URL=postgresql://postgres:reihan123@localhost:5432/incident_db
 
-# Kredensial untuk inisialisasi Docker Compose
+# Kredensial database untuk inisialisasi Docker Compose
 DB_USER=postgres
 DB_PASSWORD=reihan123
 DB_NAME=incident_db
+```
 
-🏗️ Arsitektur Singkat
+> Untuk lingkungan produksi, gunakan secret management dan jangan menyimpan kredensial secara langsung di repository.
 
-Project ini menerapkan **Layered Architecture** (Separation of Concerns) agar sistem modular, mudah di-maintain, dan mudah diuji:
-* **API Layer (`app/api/`):** Menangani lalu lintas HTTP (Request/Response) dan validasi skema data menggunakan Pydantic.
-* **Service Layer (`app/services/`):** Memuat *core business logic*, kalkulasi prioritas berdasarkan *keyword*, klasifikasi kategori via ML, dan pemicu *background tasks*.
-* **Repository Layer (`app/repositories/`):** Mengelola interaksi dengan *database* PostgreSQL menggunakan pola *Repository Pattern* dan SQLAlchemy ORM.
-* **Dependency Injection:** Dikelola penuh oleh FastAPI untuk mendistribusikan instansiasi *database* dan *service* secara aman.
+## 🏗️ Arsitektur
 
-🌐 API Endpoint
+Project ini menerapkan **Layered Architecture** untuk menjaga pemisahan tanggung jawab, modularitas, dan kemudahan pengujian.
 
-Sistem ini mengekspos endpoint utama untuk pembuatan insiden:
-- POST /api/v1/incidents
-  - Payload (JSON): Membutuhkan title (string), description (string), dan reported_by (string/email).
-  - Response (201 Created): Mengembalikan data insiden lengkap dengan id, priority (dihitung otomatis), category (hasil prediksi ML), status (OPEN), dan created_at.
+- **API Layer (`app/api/`):** Menangani lalu lintas HTTP, request/response, serta validasi skema menggunakan Pydantic.
+- **Service Layer (`app/services/`):** Menangani business logic, kalkulasi prioritas berbasis keyword, klasifikasi kategori berbasis ML, dan background task.
+- **Repository Layer (`app/repositories/`):** Mengelola interaksi dengan PostgreSQL menggunakan Repository Pattern dan SQLAlchemy ORM.
+- **Dependency Injection:** Dikelola oleh FastAPI untuk menyediakan instance database dan service secara terstruktur.
 
-🤖 Pendekatan Machine Learning
+## 🌐 API Endpoint
 
-Klasifikasi kategori tiket (ACCESS, DATABASE, PAYMENT, NETWORK, OTHER) diselesaikan menggunakan algoritma Multinomial Naive Bayes dikombinasikan dengan TF-IDF Vectorizer via scikit-learn.
+### Membuat Insiden
 
-⚖️ Asumsi dan Trade-off
+```http
+POST /api/v1/incidents
+Content-Type: application/json
+```
 
-1. Notifikasi Asinkron: Pengiriman notifikasi berjalan menggunakan BackgroundTasks bawaan FastAPI.
-2. Notification Service Eksternal: Diasumsikan sebagai layanan HTTP terpisah. Kegagalan service ini telah diisolasi (ditangkap menggunakan blok try-except & logger) agar tidak memblokir dan menggagalkan respons API utama.
-3. Pemuatan Model ML: File model .pkl dimuat ke dalam memori saat inisiasi Service.
+#### Request Body
+
+```json
+{
+  "title": "Tidak dapat mengakses aplikasi",
+  "description": "Pengguna gagal masuk ke aplikasi sejak pagi.",
+  "reported_by": "user@example.com"
+}
+```
+
+Field yang diperlukan:
+
+- `title`: Judul insiden berupa string.
+- `description`: Deskripsi insiden berupa string.
+- `reported_by`: Identitas pelapor atau alamat email.
+
+#### Response `201 Created`
+
+Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`. Nilai `priority` dihitung otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
+
+## 🤖 Machine Learning
+
+Klasifikasi kategori tiket (`ACCESS`, `DATABASE`, `PAYMENT`, `NETWORK`, dan `OTHER`) menggunakan **Multinomial Naive Bayes** yang dikombinasikan dengan **TF-IDF Vectorizer** dari scikit-learn.
+
+## ⚖️ Asumsi dan Trade-off
+
+1. **Notifikasi asinkron:** Pengiriman notifikasi menggunakan `BackgroundTasks` bawaan FastAPI.
+2. **Notification service eksternal:** Layanan notifikasi diasumsikan tersedia sebagai service HTTP terpisah. Kegagalannya diisolasi menggunakan `try-except` dan logger agar tidak menggagalkan respons API utama.
+3. **Pemuatan model ML:** File model `.pkl` dimuat ke memori saat service diinisialisasi.
