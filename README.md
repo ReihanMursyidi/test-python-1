@@ -74,6 +74,12 @@ Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`
 
 Klasifikasi kategori tiket (`ACCESS`, `DATABASE`, `PAYMENT`, `NETWORK`, dan `OTHER`) menggunakan **Multinomial Naive Bayes** yang dikombinasikan dengan **TF-IDF Vectorizer** dari scikit-learn.
 
+Jalankan perintah berikut untuk menghasilkan model:
+
+```bash
+python scripts/train_model.py
+```
+
 ## ⚖️ Asumsi dan Trade-off
 
 1. **Notifikasi asinkron:** Pengiriman notifikasi menggunakan `BackgroundTasks` bawaan FastAPI.
