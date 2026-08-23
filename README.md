@@ -2,27 +2,25 @@
 
 Backend untuk mengelola insiden, mulai dari pembuatan tiket hingga penentuan prioritas dan kategori secara otomatis.
 
-## 🚀 Menjalankan Aplikasi
+## 🚀 Cara Menjalankan Aplikasi
 
 ### Menggunakan Docker
 
-Pastikan Docker dan Docker Compose telah terpasang, lalu jalankan:
+Sistem sudah sepenuhnya Dockerized. Jalankan perintah ini di terminal:
 
 ```bash
 docker-compose up --build
 ```
 
-## 🧪 Menjalankan Pengujian
+## 🧪 Cara Menjalankan Test
 
-Untuk menjalankan seluruh test dengan output terperinci:
+Jalankan perintah berikut di terminal: 
 
 ```bash
 python -m pytest -v
 ```
 
 ## ⚙️ Environment Variables
-
-Buat file `.env` pada root project dan isi dengan konfigurasi berikut:
 
 ```dotenv
 # URL koneksi database untuk aplikasi lokal
