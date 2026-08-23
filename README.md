@@ -1,7 +1,5 @@
 # Incident Management Backend System
 
-Backend untuk mengelola insiden, mulai dari pembuatan tiket hingga penentuan prioritas dan kategori secara otomatis.
-
 ## 🚀 Cara Menjalankan Aplikasi
 
 ### Menggunakan Docker
