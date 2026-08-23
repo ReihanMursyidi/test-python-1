@@ -25,3 +25,13 @@ coverage.xml
 .DS_Store
 Thumbs.db
 .history/
+
+*.pkl
+*.model
+
+.mypy_cache/
+.ruff_cache/
+
+build/
+dist/
+*.egg-info
