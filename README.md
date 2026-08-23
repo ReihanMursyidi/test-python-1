@@ -32,8 +32,6 @@ DB_PASSWORD=reihan123
 DB_NAME=incident_db
 ```
 
-> Untuk lingkungan produksi, gunakan secret management dan jangan menyimpan kredensial secara langsung di repository.
-
 ## 🏗️ Arsitektur Singkat
 
 Project ini menerapkan **Layered Architecture** gar sistem modular, mudah di-maintain, dan mudah diuji:
