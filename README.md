@@ -34,9 +34,9 @@ DB_NAME=incident_db
 
 > Untuk lingkungan produksi, gunakan secret management dan jangan menyimpan kredensial secara langsung di repository.
 
-## 🏗️ Arsitektur
+## 🏗️ Arsitektur Singkat
 
-Project ini menerapkan **Layered Architecture** untuk menjaga pemisahan tanggung jawab, modularitas, dan kemudahan pengujian.
+Project ini menerapkan **Layered Architecture** gar sistem modular, mudah di-maintain, dan mudah diuji:
 
 - **API Layer (`app/api/`):** Menangani lalu lintas HTTP, request/response, serta validasi skema menggunakan Pydantic.
 - **Service Layer (`app/services/`):** Menangani business logic, kalkulasi prioritas berbasis keyword, klasifikasi kategori berbasis ML, dan background task.
@@ -72,7 +72,7 @@ Field yang diperlukan:
 
 Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`. Nilai `priority` dihitung otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
 
-## 🤖 Machine Learning
+## 🤖 Pendekatan Machine Learning
 
 Klasifikasi kategori tiket (`ACCESS`, `DATABASE`, `PAYMENT`, `NETWORK`, dan `OTHER`) menggunakan **Multinomial Naive Bayes** yang dikombinasikan dengan **TF-IDF Vectorizer** dari scikit-learn.
 
