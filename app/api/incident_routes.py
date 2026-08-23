@@ -43,7 +43,9 @@ def list_incidents(
    offset: int = Query(0, ge=0),
    service: IncidentService = Depends(get_incident_service)
 ):
-   incidents = service.list_incidents(status, priority, limit, offset)
+   status_val = status.value if status else None
+   priority_val = priority.value if priority else None
+   incidents = service.list_incidents(status_val, priority_val, limit, offset)
    return incidents
 
 # 4. Update Status[cite: 1]

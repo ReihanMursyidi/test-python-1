@@ -33,3 +33,11 @@ class IncidentService:
 
       saved_incident = self.repository.save(new_incident_data)
       return saved_incident
+
+   def list_incidents(self, status: str = None, priority: str = None, limit: int = 10, offset: int = 0):
+      return self.repository.get_all(
+         status=status, 
+         priority=priority, 
+         limit=limit, 
+         offset=offset
+      )
