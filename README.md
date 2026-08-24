@@ -2,13 +2,42 @@
 
 ## 🚀 Cara Menjalankan Aplikasi
 
-### Menggunakan Docker
+### 1. Menggunakan Docker
 
 Sistem sudah sepenuhnya Dockerized. Jalankan perintah ini di terminal:
 
 ```bash
 docker-compose up --build
 ```
+
+### 2. Menggunakan Server Lokal
+
+Buat Virtual Environment dengan perintah ini di terminal:
+
+```bash
+python -m venv venv
+```
+
+Aktifkan Virtual Environment dengan perintah berikut:
+
+```bash
+venv\Scripts\activate
+```
+
+Lalu install semua library yang sudah disediakan di requirements.txt:
+
+```bash
+pip install -r requirements.txt
+```
+
+Jalankan aplikasi menggunakan Uvicorn:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Aplikasi dapat diakses di `http://localhost:8000`. Dokumentasi API tersedia di
+`http://localhost:8000/docs`.
 
 ## 🧪 Cara Menjalankan Test
 
