@@ -41,3 +41,15 @@ class IncidentService:
          limit=limit, 
          offset=offset
       )
+
+   def get_incident_by_id(self, incident_id: int):
+      return self.repository.get_by_id(incident_id)
+
+   def update_status(self, incident_id: int, status: str):
+      incident = self.repository.get_by_id(incident_id)
+      if not incident:
+         return None
+
+      incident.status = status
+
+      return self.repository.save(incident)
