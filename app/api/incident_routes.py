@@ -56,7 +56,7 @@ def update_incident_status(
    service: IncidentService = Depends(get_incident_service)
 ):
 
-   updated_incident = service.update_status(incident_id, payload.status)
+   updated_incident = service.update_status(incident_id, payload.status.value)
    if not updated_incident:
       raise HTTPException(status_code=404, detail="Incident not found")
    return updated_incident
