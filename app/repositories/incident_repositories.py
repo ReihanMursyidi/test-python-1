@@ -5,7 +5,7 @@ from app.models.incident_model import Incident
 
 class IncidentRepository(ABC):
     @abstractmethod
-    def save(self, incident_data: dict):
+    def save(self, incident_data: Incident):
         pass
     
     @abstractmethod
@@ -20,12 +20,11 @@ class PostgresIncidentRepository(IncidentRepository):
     def __init__(self, db: Session):
         self.db = db
 
-    def save(self, incident_data: dict):
-        incident = Incident(**incident_data)
-        self.db.add(incident)
+    def save(self, incident_data: Incident):
+        self.db.add(incident_data)
         self.db.commit()
-        self.db.refresh(incident)
-        return incident
+        self.db.refresh(incident_data)
+        return incident_data
 
     def get_by_id(self, incident_id: int):
         return self.db.query(Incident).filter(Incident.id == incident_id).first()
