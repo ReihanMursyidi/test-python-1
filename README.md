@@ -1,30 +1,32 @@
 # Incident Management Backend System
 
+Backend system untuk mengelola insiden, dibangun menggunakan FastAPI, PostgreSQL, SQLAlchemy, dan scikit-learn.
+
 ## 🚀 Cara Menjalankan Aplikasi
 
 ### 1. Menggunakan Docker
 
-Sistem sudah sepenuhnya Dockerized. Jalankan perintah ini di terminal:
+Sistem sudah sepenuhnya menggunakan Docker. Jalankan perintah berikut di terminal:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 ### 2. Menggunakan Server Lokal
 
-Buat Virtual Environment dengan perintah ini di terminal:
+Jika ingin menjalankan aplikasi secara lokal, buat virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-Aktifkan Virtual Environment dengan perintah berikut:
+Aktifkan virtual environment:
 
 ```bash
 venv\Scripts\activate
 ```
 
-Lalu install semua library yang sudah disediakan di requirements.txt:
+Install seluruh dependensi:
 
 ```bash
 pip install -r requirements.txt
@@ -36,12 +38,12 @@ Jalankan aplikasi menggunakan Uvicorn:
 uvicorn app.main:app --reload
 ```
 
-Aplikasi dapat diakses di `http://localhost:8000`. Dokumentasi API tersedia di
-`http://localhost:8000/docs`.
+Aplikasi dapat diakses melalui `http://localhost:8000`.
+Dokumentasi API tersedia di `http://localhost:8000/docs`.
 
 ## 🧪 Cara Menjalankan Test
 
-Jalankan perintah berikut di terminal: 
+Jalankan perintah berikut:
 
 ```bash
 python -m pytest -v
@@ -49,21 +51,29 @@ python -m pytest -v
 
 ## ⚙️ Environment Variables
 
-```dotenv
-# URL koneksi database untuk aplikasi lokal
-DATABASE_URL=postgresql://postgres:reihan123@localhost:5432/incident_db
+Untuk menjaga keamanan, kredensial database tidak disimpan di dalam source code.
+Inisialisasikan environment variables sebelum menjalankan aplikasi dengan Docker.
 
-# Kredensial database untuk inisialisasi Docker Compose
-DB_USER=postgres
-DB_PASSWORD=reihan123
-DB_NAME=incident_db
+1. Salin template `.env.example` menjadi `.env`:
+
+```bash
+cp .env.example .env
 ```
+
+2. Buka file `.env`, lalu isi variabel sesuai kebutuhan. Contoh:
+
+```bash
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=masukkan_password_anda_di_sini
+POSTGRES_DB=incident_db
+```
+> **Catatan:** File `.env` seharusnya tercantum dalam `.gitignore` agar tidak terunggah ke repositori.
 
 ## 🏗️ Arsitektur Singkat
 
 Project ini menerapkan **Layered Architecture** gar sistem modular, mudah di-maintain, dan mudah diuji:
 
-- **API Layer (`app/api/`):** Menangani lalu lintas HTTP, request/response, serta validasi skema menggunakan Pydantic.
+- **API Layer (`app/api/`):** Menangani lalu lintas HTTP, request/response, dan validasi skema menggunakan Pydantic.
 - **Service Layer (`app/services/`):** Menangani business logic, kalkulasi prioritas berbasis keyword, klasifikasi kategori berbasis ML, dan background task.
 - **Repository Layer (`app/repositories/`):** Mengelola interaksi dengan PostgreSQL menggunakan Repository Pattern dan SQLAlchemy ORM.
 - **Dependency Injection:** Dikelola oleh FastAPI untuk menyediakan instance database dan service secara terstruktur.
@@ -91,11 +101,11 @@ Field yang diperlukan:
 
 - `title`: Judul insiden berupa string.
 - `description`: Deskripsi insiden berupa string.
-- `reported_by`: Identitas pelapor atau alamat email.
+- `reported_by`: Identitas atau alamat email pelapor.
 
 #### Response `201 Created`
 
-Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`. Nilai `priority` dihitung otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
+Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`. Nilai `priority` dihitung secara otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
 
 ## 🤖 Pendekatan Machine Learning
 
