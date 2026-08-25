@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, Index
+from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, Index, text
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 import enum
@@ -25,5 +25,10 @@ class Incident(Base):
    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
    __table_args__ = (
-      Index('idx_incidents_status_created_at', 'status', 'created_at'),
+      Index(
+         'idx_incidents_status_created_at', 
+         'status', 
+         'created_at',
+         postgresql_where=text("status = 'OPEN'")
+      ),
    )
