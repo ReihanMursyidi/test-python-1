@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, status
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks, status, Query
 from typing import List, Optional
 from app.schemas.incident_schema import IncidentCreate, IncidentResponse, IncidentUpdateStatus, IncidentStatus, IncidentPriority
 from app.core.dependencies import get_incident_service
@@ -52,11 +52,11 @@ def list_incidents(
 @router.patch("/{incident_id}/status", response_model=IncidentResponse)
 def update_incident_status(
    incident_id: int, 
-   payload: IncidentUpdateStatus,
-   service: IncidentService = Depends(get_incident_service)
+   status: IncidentStatus = Query(..., description="Select a status from the dropdown"),
+   service = Depends(get_incident_service)
 ):
 
-   updated_incident = service.update_status(incident_id, payload.status.value)
+   updated_incident = service.update_status(incident_id, status.value)
    if not updated_incident:
       raise HTTPException(status_code=404, detail="Incident not found")
    return updated_incident
