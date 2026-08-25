@@ -39,6 +39,7 @@ uvicorn app.main:app --reload
 ```
 
 Aplikasi dapat diakses melalui `http://localhost:8000`.
+
 Dokumentasi API tersedia di `http://localhost:8000/docs`.
 
 ## 🧪 Cara Menjalankan Test
@@ -105,7 +106,9 @@ Field yang diperlukan:
 
 #### Response `201 Created`
 
-Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`. Nilai `priority` dihitung secara otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
+Mengembalikan data insiden lengkap dengan `id`, `priority`, `category`, `status`, dan `created_at`.
+
+Nilai `priority` dihitung secara otomatis, sedangkan `category` diprediksi oleh model ML. Status awal insiden adalah `OPEN`.
 
 ## 🤖 Pendekatan Machine Learning
 
