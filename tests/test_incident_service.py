@@ -46,3 +46,26 @@ def test_priority_low_for_general_questions(incident_service):
    saved_incident = args[0]
    
    assert saved_incident.priority == "LOW"
+
+def test_incident_creation_success(incident_service):
+   # Simulasi repository.save berhasil
+   mock_saved_incident = MagicMock(id=1, status="OPEN")
+   incident_service.repository.save.return_value = mock_saved_incident
+
+   result = incident_service.create_incident(
+      title="System Issue", 
+      description="Cannot process payment", 
+      reported_by="user@test.com"
+   )
+
+   assert result.id == 1
+   assert result.status == "OPEN"
+   incident_service.repository.save.assert_called_once()
+
+def test_incident_not_found(incident_service):
+   # Simulasi repository tidak menemukan data
+   incident_service.repository.get_by_id.return_value = None
+
+   result = incident_service.get_incident_by_id(9999)
+
+   assert result is None
