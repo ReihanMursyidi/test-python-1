@@ -102,3 +102,21 @@ def test_repository_service_interaction(incident_service):
    )
    # Cek service memanggil fungsi save() dari repository tepat satu kali
    incident_service.repository.save.assert_called_once()
+
+def test_classifier_called_on_creation(incident_service):
+   # Memastikan classifier dipanggil saat incident dibuat
+   # 1. ARRANGE
+   title = "Payment issue"
+   description = "Cannot process transaction"
+
+   # 2. ACT
+   incident_service.create_incident(
+      title = title,
+      description = description,
+      reported_by = "user@test.com"
+   )
+
+   # 3. ASSERT
+   expected_text = f"{title} {description}".lower()
+
+   incident_service.classifier.predict.assert_called_once_with(expected_text)
